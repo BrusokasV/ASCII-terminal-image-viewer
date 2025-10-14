@@ -4,6 +4,7 @@ This is project is able to display png images as ASCII art in the terminal.
 ## Current functionality:
 - Reads in a png file
 - Downscales the image to fit within the terminal
+- Applies a contrast operation
 - Displays the image as ASCII art
 
 ## ToDo:
@@ -21,4 +22,7 @@ Compilation:
 - g++ tiv.cpp -o tiv -lncursesw -std=c++20
 
 Operation:
-- ./tiv \<filename\>
+- ./tiv [-c] \<filename\>
+
+Optional flags:
+- -c: disable contrast mask
