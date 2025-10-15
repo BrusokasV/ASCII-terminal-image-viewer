@@ -71,7 +71,7 @@ void drawImage(uint8_t* image, int width, int height){
     float a_scale = 10.0;
 
     float b_factor = b_scale / a_scale; 
-    mvprintw(2, 0, "d_offset = %d, b_scale = %d, a_scale = %f, b_factor = %f, v_min = %d, v_max = %d", d_offset, b_scale, a_scale, b_factor, v_min, v_max);
+    //mvprintw(2, 0, "d_offset = %d, b_scale = %d, a_scale = %f, b_factor = %f, v_min = %d, v_max = %d", d_offset, b_scale, a_scale, b_factor, v_min, v_max);
 
     for (int i = 0; i < height; i++){
         move(starty, startx);
@@ -95,16 +95,14 @@ uint8_t* downscale(uint8_t* init_image, int init_width, int init_height, int* pn
         new_width = init_width;
     }
     uint8_t* target_image = new uint8_t[new_height*new_width];
-    int index, acc, count;
+    int acc, count;
     if ((init_width == new_width) && (init_height == new_height)){
-        for (int target_i = 0; target_i < new_height; target_i++){
-            for (int target_j = 0; target_j < new_width; target_j++){
-                index = target_i*new_width + target_j;
-                target_image[index] = init_image[index];
-            }
+        for (int target_i = 0; target_i < new_height*new_width; target_i++){
+            target_image[target_i] = init_image[target_i];
         }
     }
     else {
+#pragma omp parallel for collapse(2) private(acc, count) shared(new_height, new_width, factor, init_image, target_image)
         for (int target_i = 0; target_i < new_height; target_i++){
             for (int target_j = 0; target_j < new_width; target_j++){
                 acc = 0;
